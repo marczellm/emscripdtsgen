@@ -1,0 +1,5 @@
+{
+    "cmake.additionalKits": ["cmake-kits.json"],
+    "cmake.configureOnOpen": true,
+    "cmake.generator": "Ninja Multi-Config"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "emscripdtsgen",
+  "version": "1.0.0",
+  "description": "Generate TypeScript declarations for Embind bindings",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.3"
+  },
+  "keywords": [
+    "emscripten",
+    "typescript",
+    "embind"
+  ],
+  "author": "Márton Marczell",
+  "license": "ISC"
+}

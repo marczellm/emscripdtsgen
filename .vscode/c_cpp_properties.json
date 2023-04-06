@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "intelliSenseMode": "linux-clang-x64",
+            "cStandard": "c17",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
