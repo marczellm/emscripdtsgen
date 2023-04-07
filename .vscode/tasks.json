@@ -33,12 +33,35 @@
             "problemMatcher": []
         },
         {
-            "label": "tsc watch",
+            "label": "tsc watch: basic",
             "runOptions": {
                 "runOn": "folderOpen"
             },
             "type": "shell",
             "command": "npx tsc --watch",
+            "options": {"cwd": "examples/basic"},
+            "problemMatcher": "$tsc-watch",
+            "isBackground": true
+        },        
+        {
+            "label": "tsc watch: modularize",
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "type": "shell",
+            "command": "npx tsc --watch",
+            "options": {"cwd": "examples/modularize"},
+            "problemMatcher": "$tsc-watch",
+            "isBackground": true
+        },        
+        {
+            "label": "tsc watch: es6",
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "type": "shell",
+            "command": "npx tsc --watch",
+            "options": {"cwd": "examples/es6"},
             "problemMatcher": "$tsc-watch",
             "isBackground": true
         }

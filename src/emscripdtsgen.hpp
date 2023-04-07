@@ -30,6 +30,32 @@ struct Signature {
     std::string mName;
     LazyString mType;
     std::vector<LazyString> mArguments;
+
+    std::string to_function_signature() const {
+        std::string ret = "function " + mName + "(";
+        
+        if (!mArguments.empty()) {
+            size_t i = 0;
+            for (; i < mArguments.size() - 1; i++) {
+                ret += "arg" + std::to_string(i) + ": " + mArguments[i]() + ", ";
+            }
+            ret += "arg" + std::to_string(i) + ": " + mArguments[i]();        
+        }
+        return ret + "): " + mType();
+    }
+
+    std::string to_method_signature() const {
+        std::string ret = mName + "(";
+        
+        if (!mArguments.empty()) {
+            size_t i = 0;
+            for (; i < mArguments.size() - 1; i++) {
+                ret += "arg" + std::to_string(i) + ": " + mArguments[i]() + ", ";
+            }
+            ret += "arg" + std::to_string(i) + ": " + mArguments[i]();        
+        }
+        return ret + "): " + mType();
+    }
 };
 
 template<typename T>
@@ -38,6 +64,9 @@ struct TsName {
 
     static LazyString lazy_name() {
         return [] () {
+            if constexpr (std::is_arithmetic<T>()) {
+                return "number"s;
+            }
             if (sName.empty ()) {
                 std::cout << "warning: binding for type " << typeid(T).name() << " not found!" << std::endl;
                 return "unknown"s;
@@ -46,6 +75,8 @@ struct TsName {
         };
     }
 };
+
+template<typename T> std::string TsName<T>::sName;
 
 template<typename ... Args>
 std::vector<LazyString> collect_arg_types() {
@@ -63,8 +94,6 @@ struct ModuleContents {
     std::vector<std::unique_ptr<Declarable>> mDeclarations;
 };
 
-template<typename T> std::string TsName<T>::sName;
-
 template<>
 struct TsName<bool> {
     static LazyString lazy_name() {
@@ -79,6 +108,15 @@ struct TsName<void> {
     static LazyString lazy_name() {
         return [] () {
             return "void";
+        };
+    }
+};
+
+template<>
+struct TsName<std::string> {
+    static LazyString lazy_name() {
+        return [] () {
+            return "string";
         };
     }
 };
@@ -156,9 +194,9 @@ public:
     std::string declaration() const override {
         std::string ret = "interface " + mName + " {";
         for (const auto& field: mFields) {
-            ret += "\n\t" + field.mName + ": " + field.mType () + "\n";
+            ret += "\n\t" + field.mName + ": " + field.mType ();
         }
-        return ret + "}";
+        return ret + "\n}";
     }
 };
 
@@ -232,9 +270,17 @@ public:
     }
 
     std::string declaration() const override {
-        std::string ret = "interface " + mName + " {";
+        std::string ret = "interface " + mName + " extends CppObjectHandle {";
+
+        for (const auto& prop: mProperties) {
+            ret += "\n\t" + prop.mName + ": " + prop.mType();
+        }
+        
+        for (const auto& method: mMethods) {
+            ret += "\n\t" + method.to_method_signature();
+        }
        
-        return ret + "\n\tdelete(): void\n}";
+        return ret + "\n}";
     }
 };
 

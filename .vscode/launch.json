@@ -2,10 +2,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Edge",
+            "name": "Examples: Basic",
             "request": "launch",
             "type": "msedge",
-            "url": "http://localhost:8000",
+            "url": "http://localhost:8000/examples/basic/index.html",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "CMake - Build",
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "Examples: Modularize",
+            "request": "launch",
+            "type": "msedge",
+            "url": "http://localhost:8000/examples/modularize/index.html",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "CMake - Build",
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "Examples: ES6",
+            "request": "launch",
+            "type": "msedge",
+            "url": "http://localhost:8000/examples/es6/index.html",
             "webRoot": "${workspaceFolder}",
             "preLaunchTask": "CMake - Build",
             "internalConsoleOptions": "openOnSessionStart"

@@ -1,7 +1,8 @@
 {
     "cmake.additionalKits": ["cmake-kits.json"],
     "cmake.configureOnOpen": true,
-    "cmake.generator": "Ninja",
+    "cmake.generator": "Ninja",    
+    "cmake.sourceDirectory": "${workspaceFolder}/examples",
     "files.associations": {
         "string": "cpp",
         "__bit_reference": "cpp",

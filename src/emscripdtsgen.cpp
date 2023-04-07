@@ -1,7 +1,7 @@
 #include <fstream>
 #include "emscripdtsgen.hpp"
 
-int main () {
+int main() {
 #ifdef EXPORT_NAME
     std::string exportName = EXPORT_NAME;
 #else 
@@ -15,16 +15,24 @@ int main () {
 #endif
 
     std::ofstream outFile (exportName + extension);
+    outFile << "interface CppObjectHandle {\n\tdelete(): void\n}\n";
     for (const auto& declarable: ModuleContents::Get ().mDeclarations) {
         outFile << std::endl << declarable->declaration () << std::endl;
     }
-    outFile << "interface EmscriptenModule2 extends EmscriptenModule {" << std::endl;    
+    outFile << std::endl << "interface EmscriptenModule2 extends EmscriptenModule {";
+    for (const auto& constant: ModuleContents::Get ().mConstants) {
+        outFile << "\n\t" << constant.mName << ": " << constant.mType();
+    }
+    for (const auto& func: ModuleContents::Get ().mFunctions) {
+        outFile << "\n\t" << func.to_method_signature();
+    }
+    
     for (const auto& declarable: ModuleContents::Get ().mDeclarations) {
         if (declarable->export_on_module()) {
-            outFile << std::endl << "\t" << *declarable->export_on_module() << std::endl;
+            outFile << "\n\t" << *declarable->export_on_module();
         }        
     }
-    outFile << std::endl << "}" << std::endl;
+    outFile << "\n}\n\n";
 
 #ifdef EXPORT_ES6
     outFile << "export default ";
@@ -33,9 +41,9 @@ int main () {
 #endif
 
 #ifdef MODULARIZE
-    outFile << "function " << exportName << "(): Promise<EmscriptenModule2>;" << std::endl;
+    outFile << "function " << exportName << "(): Promise<EmscriptenModule2>;\n";
 #else
-    outFile << "const " << exportName << ": EmscriptenModule2;" << std::endl;
+    outFile << "const " << exportName << ": EmscriptenModule2;\n";
 #endif
     outFile.close();
 }

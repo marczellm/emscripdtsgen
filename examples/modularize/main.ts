@@ -1,4 +1,6 @@
-import ES6ModuleFactory from './build/Debug/ES6ModuleFactory.mjs';
+import '../../build/ModuleFactory.js';
+
+function modularizedExample () {
 
 let anyError = false;
 
@@ -11,9 +13,7 @@ function assertEq (actual: unknown, expected: unknown) {
     assert (actual == expected, `actual ${actual} does not equal expected ${expected}`);
 }
 
-declare function ModuleFactory(): Promise<any>;
-
-function testBindings (Module: any) {
+ModuleFactory().then(Module => {
     assertEq(Module.function0(), 0);
     assertEq(Module.function1(1), 1);
     assertEq(Module.function2(1, 2), 3);
@@ -46,9 +46,10 @@ function testBindings (Module: any) {
 
     obj1.delete();
     obj2.delete();
-}
-
-testBindings(await ModuleFactory());
-testBindings(await ES6ModuleFactory());
+})
 
 console.log(anyError ? 'Test failed' : 'Test passed');
+
+}
+
+modularizedExample();

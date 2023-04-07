@@ -1,5 +1,5 @@
 #include "binding_api.hpp"
-#include "lib.hpp"
+#include "lib/lib.hpp"
 
 EMSCRIPTEN_BINDINGS (ExampleBindings) {
     using namespace emscripten;
