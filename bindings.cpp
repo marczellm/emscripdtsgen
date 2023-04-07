@@ -34,4 +34,6 @@ EMSCRIPTEN_BINDINGS (ExampleBindings) {
     .smart_ptr_constructor("Class2", std::make_shared<Class2, std::string>)
     .function("get_class1", &Class2::get_class1)
     .function("get_class2", &Class2::get_class2);
+
+    class_<Class3> ("Class3");
 }
