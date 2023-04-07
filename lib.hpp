@@ -15,8 +15,8 @@ enum class Enum {
 };
 
 struct Struct1 {
-    bool mBool;
-    Enum mEnum;
+    bool mBool = true;
+    Enum mEnum = Enum::Value2;
 };
 
 struct Struct2 {
@@ -27,7 +27,7 @@ class Class1 {
 public:
     static std::shared_ptr<Class1> Create();
 
-    int mField;
+    int mField = 5;
     const char mChar = 'c';
     Struct1 get_struct1();
     Struct2 get_struct2() const;
@@ -37,6 +37,6 @@ class Class2 {
     public:
     Class2 (std::string);
 
-    std::shared_ptr<Class1> get_class1(Struct2);
+    std::shared_ptr<Class1> get_class1(Struct1);
     std::shared_ptr<Class2> get_class2(std::shared_ptr<Class1>);
 };

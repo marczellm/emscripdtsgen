@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "CMake - Build",            
+            "label": "CMake - Build",
             "type": "cmake",
             "command": "build",
             "problemMatcher": [
@@ -13,6 +13,34 @@
                 "panel": "dedicated"
             },
             "group": "build"
+        },
+        {
+            "label": "Build TypeScript",
+            "type": "shell",
+            "command": "npx tsc",
+            "group": "build",
+            "dependsOn": "CMake - Build",
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "Dev server",
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "type": "shell",
+            "isBackground": true,
+            "command": "python -m http.server",
+            "problemMatcher": []
+        },
+        {
+            "label": "tsc watch",
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "type": "shell",
+            "command": "npx tsc --watch",
+            "problemMatcher": "$tsc-watch",
+            "isBackground": true
         }
     ]
 }

@@ -1,5 +1,8 @@
 {
     "cmake.additionalKits": ["cmake-kits.json"],
     "cmake.configureOnOpen": true,
-    "cmake.generator": "Ninja Multi-Config"
+    "cmake.generator": "Ninja Multi-Config",
+    "files.associations": {
+        "string": "cpp"
+    }
 }

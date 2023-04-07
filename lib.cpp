@@ -24,8 +24,7 @@ Struct2 Class1::get_struct2() const {
     return {};
 }
 
-
-std::shared_ptr<Class1> Class2::get_class1(Struct2) {
+std::shared_ptr<Class1> Class2::get_class1(Struct1) {
     return nullptr;
 }
 
