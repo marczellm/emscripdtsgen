@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Generate TypeScript declarations for Embind bindings",
   "dependencies": {},
-  "type": "module",
   "devDependencies": {
     "@types/emscripten": "^1.39.6",
     "typescript": "^5.0.3"
