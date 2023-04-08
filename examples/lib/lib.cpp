@@ -32,6 +32,6 @@ std::shared_ptr<Class2> Class2::get_class2(std::shared_ptr<Class1>) {
     return nullptr;
 }
 
-Class2::Class2 (std::string) {
+Class2::Class2(std::string) {
 
 }

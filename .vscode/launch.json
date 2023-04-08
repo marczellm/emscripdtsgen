@@ -5,7 +5,7 @@
             "name": "Examples: Basic",
             "request": "launch",
             "type": "msedge",
-            "url": "http://localhost:8000/examples/basic/index.html",
+            "url": "http://localhost:8000/examples/basic/",
             "webRoot": "${workspaceFolder}",
             "preLaunchTask": "CMake - Build",
             "internalConsoleOptions": "openOnSessionStart"
@@ -14,7 +14,7 @@
             "name": "Examples: Modularize",
             "request": "launch",
             "type": "msedge",
-            "url": "http://localhost:8000/examples/modularize/index.html",
+            "url": "http://localhost:8000/examples/modularize/",
             "webRoot": "${workspaceFolder}",
             "preLaunchTask": "CMake - Build",
             "internalConsoleOptions": "openOnSessionStart"
@@ -23,7 +23,7 @@
             "name": "Examples: ES6",
             "request": "launch",
             "type": "msedge",
-            "url": "http://localhost:8000/examples/es6/index.html",
+            "url": "http://localhost:8000/examples/es6/",
             "webRoot": "${workspaceFolder}",
             "preLaunchTask": "CMake - Build",
             "internalConsoleOptions": "openOnSessionStart"

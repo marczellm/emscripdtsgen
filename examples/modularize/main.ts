@@ -1,11 +1,11 @@
-import '../../build/ModuleFactory.js';
-
-function modularizedExample () {
+/// <reference path="../../build/ModuleFactory.d.ts" />
 
 let anyError = false;
+let testsPassed = 0;
 
 function assert(value: unknown, msg?: string) {
     anyError = anyError || !value;
+    testsPassed += value ? 1 : 0;
     console.assert(!!value, msg);
 }
 
@@ -46,10 +46,6 @@ ModuleFactory().then(Module => {
 
     obj1.delete();
     obj2.delete();
-})
 
-console.log(anyError ? 'Test failed' : 'Test passed');
-
-}
-
-modularizedExample();
+    console.log(anyError ? 'Test failed' : (testsPassed + ' tests passed'));
+});

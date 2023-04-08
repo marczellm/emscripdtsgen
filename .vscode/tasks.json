@@ -15,14 +15,6 @@
             "group": "build"
         },
         {
-            "label": "Build TypeScript",
-            "type": "shell",
-            "command": "npx tsc",
-            "group": "build",
-            "dependsOn": "CMake - Build",
-            "problemMatcher": "$tsc"
-        },
-        {
             "label": "Dev server",
             "runOptions": {
                 "runOn": "folderOpen"

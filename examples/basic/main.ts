@@ -1,9 +1,11 @@
-import '../../build/Module.js';
+/// <reference path="../../build/Module.d.ts" />
 
 let anyError = false;
+let testsPassed = 0;
 
 function assert(value: unknown, msg?: string) {
     anyError = anyError || !value;
+    testsPassed += value ? 1 : 0;
     console.assert(!!value, msg);
 }
 
@@ -44,6 +46,6 @@ Module.onRuntimeInitialized = () => {
 
     obj1.delete();
     obj2.delete();
-};
 
-console.log(anyError ? 'Test failed' : 'Test passed');
+    console.log(anyError ? 'Test failed' : (testsPassed + ' tests passed'));
+};

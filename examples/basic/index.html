@@ -1,7 +1,12 @@
 <html>
     <head></head>
     <body>
-        <!-- <script type="module" src="../../build/Module.js"></script> -->
+        <script>
+            var Module = {                
+                locateFile: url => `../../build/${url}`                
+            }
+        </script>
+        <script src="../../build/Module.js"></script>
         <script type="module" src="main.js"></script>
     </body>
 </html>

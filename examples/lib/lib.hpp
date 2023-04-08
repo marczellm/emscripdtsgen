@@ -35,7 +35,7 @@ public:
 
 class Class2 {
     public:
-    Class2 (std::string);
+    Class2(std::string);
 
     std::shared_ptr<Class1> get_class1(Struct1);
     std::shared_ptr<Class2> get_class2(std::shared_ptr<Class1>);

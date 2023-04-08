@@ -11,11 +11,11 @@ using namespace std::string_literals;
 #define EMSCRIPTEN_BINDINGS(name) __attribute__((constructor)) static void emscripdtsgen_init_##name()
 
 // Declarations can be in any order, therefore we can only count on all type names being registered at the time we start printing them
-typedef std::function<std::string ()> LazyString;
+typedef std::function<std::string()> LazyString;
 
 class Declarable {
 protected:
-    Declarable(const std::string& name): mName (name) {}
+    Declarable(const std::string& name): mName(name) {}
 
 public:
     const std::string mName;
@@ -67,7 +67,7 @@ struct TsName {
             if constexpr (std::is_arithmetic<T>()) {
                 return "number"s;
             }
-            if (sName.empty ()) {
+            if (sName.empty()) {
                 std::cout << "warning: binding for type " << typeid(T).name() << " not found!" << std::endl;
                 return "unknown"s;
             }
@@ -121,10 +121,22 @@ struct TsName<std::string> {
     }
 };
 
+template<typename T>
+struct TsName<const T> : public TsName <T> {};
+
+template<typename T>
+struct TsName<T&> : public TsName <T> {};
+
+template<typename T>
+struct TsName<T&&> : public TsName <T> {};
+
+template<typename T>
+struct TsName<std::shared_ptr<T>> : public TsName <T> {};
+
 namespace emscripten {
 
 template<typename ReturnType, typename ... Args>
-void function(const std::string& name, ReturnType (*pFunction) (Args ... args)) {
+void function(const std::string& name, ReturnType (*pFunction)(Args ... args)) {
     ModuleContents::Get().mFunctions.push_back(Signature {
         name,
         TsName<ReturnType>::lazy_name(),
@@ -150,7 +162,7 @@ public:
     }
 
     ~enum_() {
-        ModuleContents::Get().mDeclarations.push_back(std::make_unique<enum_> (*this));
+        ModuleContents::Get().mDeclarations.push_back(std::make_unique<enum_>(*this));
     }
 
     enum_& value(const std::string& name, T value) {
@@ -180,7 +192,7 @@ public:
     }
 
     ~value_object() {
-        ModuleContents::Get().mDeclarations.push_back(std::make_unique<value_object> (*this));
+        ModuleContents::Get().mDeclarations.push_back(std::make_unique<value_object>(*this));
     }
     
     template<typename FieldType>
@@ -194,7 +206,7 @@ public:
     std::string declaration() const override {
         std::string ret = "interface " + mName + " {";
         for (const auto& field: mFields) {
-            ret += "\n\t" + field.mName + ": " + field.mType ();
+            ret += "\n\t" + field.mName + ": " + field.mType();
         }
         return ret + "\n}";
     }
@@ -202,7 +214,7 @@ public:
 
 template<class T>
 class class_: public Declarable {
-    bool mConstructible = false;
+    std::vector<Signature> mConstructors;
     std::vector<Signature> mProperties;
     std::vector<Signature> mMethods;
     std::vector<Signature> mStaticMethods;
@@ -212,11 +224,7 @@ public:
     }
 
     ~class_() {
-        ModuleContents::Get().mDeclarations.push_back(std::make_unique<class_> (*this));
-    }
-
-    std::optional<std::string> export_on_module() const override {
-        return mName + ": { prototype: " + mName + " }"; 
+        ModuleContents::Get().mDeclarations.push_back(std::make_unique<class_>(*this));
     }
 
     template<typename FieldType>
@@ -228,31 +236,31 @@ public:
     }
 
     template<typename ReturnType, typename ... Args>
-    class_& function(const std::string& name, ReturnType (T::*pFunction) (Args ... args)) {
+    class_& function(const std::string& name, ReturnType (T::*pFunction)(Args ... args)) {
         mMethods.push_back(Signature {
             name,
-            TsName<T>::lazy_name(),
-            collect_arg_types<Args...> ()
+            TsName<ReturnType>::lazy_name(),
+            collect_arg_types<Args...>()
         });
         return *this;
     }
 
     template<typename ReturnType, typename ... Args>
-    class_& function(const std::string& name, ReturnType (T::*pFunction) (Args ... args) const) {
+    class_& function(const std::string& name, ReturnType (T::*pFunction)(Args ... args) const) {
         mMethods.push_back(Signature {
             name,
-            TsName<T>::lazy_name(),
-            collect_arg_types<Args...> ()
+            TsName<ReturnType>::lazy_name(),
+            collect_arg_types<Args...>()
         });        
         return *this;
     }
 
     template<typename ReturnType, typename ... Args>
-    class_& class_function(const std::string& name, ReturnType (*pFunction) (Args ... args)) {
+    class_& class_function(const std::string& name, ReturnType (*pFunction)(Args ... args)) {
         mStaticMethods.push_back(Signature {
             name,
-            TsName<T>::lazy_name(),
-            collect_arg_types<Args...> ()
+            TsName<ReturnType>::lazy_name(),
+            collect_arg_types<Args...>()
         });
         
         return *this;
@@ -265,7 +273,11 @@ public:
 
     template<typename SmartPtrType, typename... Args>
     class_& smart_ptr_constructor(const std::string& smartPtrName, SmartPtrType (*factory)(Args...)) {
-        mConstructible = true;
+        mConstructors.push_back(Signature {
+            "new",
+            TsName<T>::lazy_name(),
+            collect_arg_types<Args...>()
+        });
         return *this;
     }
 
@@ -281,6 +293,24 @@ public:
         }
        
         return ret + "\n}";
+    }
+
+    std::optional<std::string> export_on_module() const override {
+        if (mConstructors.empty() && mStaticMethods.empty()) {
+            return std::nullopt;
+        }
+
+        std::string ret = mName + ": {\n\t\tprototype: " + mName;
+
+        for (const auto& constructor: mConstructors) {
+            ret += "\n\t\t" + constructor.to_method_signature();
+        }
+
+        for (const auto& method: mStaticMethods) {
+            ret += "\n\t\t" + method.to_method_signature();
+        }
+
+        return ret + "\n\t}";
     }
 };
 
